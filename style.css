@@ -31,7 +31,7 @@
   font-family: "Hiragino Mincho Pro", "MS Mincho", "MS PMincho", 游明朝, "Yu Mincho", YuMincho, serif;
 }
 
-.sentence-number {
+#typer .sentence-number {
     margin-right: 5px;
     color: #777777;
     font-family: 'Roboto', sans-serif;
@@ -39,7 +39,7 @@
     font-weight: 400;
 }
 
-.correct-sentence {
+#typer .correct-sentence {
   background-color: springgreen; 
   background-image: linear-gradient(315deg, #7ee8fa 0%, springgreen 50%)
 }

@@ -1,19 +1,25 @@
 const allSentences = () => Array.from(
-    $('#article-content')
-        .find('.paragraph.body .sentence')
+    $('#article-content .paragraph.body .sentence')
         .map(function(){
             return $(this).find('.wpt, .nw').text()
         })
 );
 
-function sentenceHTML(sentence, idx, width) {
+const allAudios= () => Array.from(
+    $('#article-content .paragraph.body .sentence')
+        .map(function(){
+            return $(this).attr('data-id');
+        })
+);
+
+function sentenceHTML(sentence, idx, audios, width) {
     style = `style="width: ${width}px; height: ${60 * Math.ceil(sentence.length * 24 / width)}px"`;
     return `
         <span class="paragraph body" ${style}>
             <span class="sentence">
                 <span class="container">
                     <span class="sentence-number">${idx + 1}.</span>
-                    <span class="play-button-container"><span class="play-button play-button-standard noselect" onclick="router.route('RouteObjID_1000', function(event) { this.playSentenceClicked(event, 'SmTWrScNGosUBIKSoePp'); }, event);">▶️</span></span>
+                    <span class="play-button-container"><span class="play-button play-button-standard noselect" onclick="router.route('RouteObjID_1000', function(event) { this.playSentenceClicked(event, '${audios[idx]}'); }, event);">▶️</span></span>
                     <textarea class="free-typing" tabindex="${idx + 1}" ${style}></textarea>
                     <textarea tabindex=0 placeholder="${sentence}" ${style}></textarea>
                 </span>
@@ -23,13 +29,15 @@ function sentenceHTML(sentence, idx, width) {
 }
     
 function setupSentences() {
+    const sentences = allSentences();
+    const audios = allAudios();
     $('#article-content').append('<div id="typer" class="article"></div>');
     $('#typer').hide()
     
     const width = $('#article-content').width() - 80;
     allSentences().forEach((sentence, idx) =>  
         $('#typer').append(
-            sentenceHTML(sentence, idx, width)
+            sentenceHTML(sentence, idx, audios, width)
         )
     );
 };
