@@ -9,7 +9,7 @@ const allSentencesWithAudios = () => Array.from(
 );
 
 const allTextVals = () => Array.from(
-    $('.free-typing').map(function() { 
+    $('#typer .free-typing').map(function() { 
         return $(this).val()} 
     )
 );
@@ -38,6 +38,15 @@ function sentenceHTML(sentence, audio, idx, width) {
     `;
 }
 
+function enterToTab(e) {
+    const key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+    if (key == 13) {
+        e.preventDefault();
+        const ts = $(this).closest('div').find('.free-typing');
+        ts.eq( ts.index(this) + 1 ).focus();
+    }
+};
+
 function playAudio() {
     $(this).prev().children().trigger('click');
 }
@@ -56,19 +65,24 @@ function setupSentences() {
     );
 
     const store = JSON.parse(localStorage.getItem(episode)) || [];
-    $('#article-content .free-typing').each(function(idx) {
+    $('#typer .free-typing').each(function(idx) {
+        // Read from Local Stroage
         $(this).val(store[idx]);
         const sentence = sentencesWithAudios[idx].sentence
         isCorrect(this, sentence);
 
+        // Write to Local Stroage
         $(this).bind('input propertychange', () => {
             localStorage.setItem(episode, JSON.stringify(allTextVals()));
             isCorrect(this, sentence);
         })
+        $(this).on("keypress", enterToTab);
 
+        // Audio with focus and click
         $(this).focus(playAudio);
         $(this).click(playAudio);
         $(this).prev().click(function() {
+            // prevent infinite loop
             $(this).next().unbind('focus');
             $(this).next().focus();
             $(this).next().bind('focus', playAudio);
@@ -84,26 +98,14 @@ const toggleButtonHTML = `
     </div>
 `;
 
-function toggle() {
-    $('.article').toggle()
-    $('#typer-toggle span').text((_, text) => 
-        text == readingMode ? typingMode : readingMode
-    );
-}
-
-function enterToTab(e) {
-    const key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
-    if (key == 13) {
-        e.preventDefault();
-        const ts = $(this).closest('div').find('.free-typing');
-        ts.eq( ts.index(this) + 1 ).focus();
-    }
-};
-
 function setupToggle() {
     $('.article-header-image').after(toggleButtonHTML);
-    $('#typer-toggle').click(toggle);
-    $('textarea').on("keypress", enterToTab);
+    $('#typer-toggle').click(function() {
+        $('.article').toggle()
+        $('#typer-toggle span').text((_, text) => 
+            text == readingMode ? typingMode : readingMode
+        );
+    });
 };
 
 $(() => {
