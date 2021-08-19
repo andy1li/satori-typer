@@ -15,12 +15,27 @@ const allTextVals = () => Array.from(
 );
 
 function checkCorrect(textArea, sentence) {
-    if ($(textArea).val().trim() === sentence) {
-        $(textArea).next().addClass('correct-sentence');
+    if (textArea.val().trim() === sentence) {
+        textArea.next().animate({ opacity: 0 }, 0);
+        textArea.next().animate({ opacity: 1 }, 200);
+        textArea.next().addClass('correct-sentence');
     } else {
-        $(textArea).next().removeClass('correct-sentence');
+        textArea.next().removeClass('correct-sentence');
     }
 }
+
+// function checkCorrect(textArea, sentence) {
+//     if (textArea.val().trim() === sentence 
+//     && !textArea.next().hasClass('correct-sentence')) 
+//     {
+//         textArea.next().animate({ opacity: 0}, 0);
+//         console.log('')
+//         textArea.next().addClass('correct-sentence');
+//         textArea.next().animate({ opacity: 1}, 1000);
+//     } else {
+//         textArea.next().removeClass('correct-sentence');
+//     }
+// }
 
 function sentenceHTML(sentence, audio, idx, width) {
     style = `style="width: ${width}px; height: ${8 + 60 * Math.ceil(sentence.length * 24 / width)}px"`;
@@ -60,12 +75,12 @@ function setupSentences() {
         // Read from Local Stroage
         $(this).val(store[idx]);
         const sentence = sentencesWithAudios[idx].sentence
-        checkCorrect(this, sentence);
+        checkCorrect($(this), sentence);
 
         // Write to Local Stroage
         $(this).bind('input propertychange', () => {
             localStorage.setItem(episode, JSON.stringify(allTextVals()));
-            checkCorrect(this, sentence);
+            checkCorrect($(this), sentence);
         })
         
         // Audio with focus and click
