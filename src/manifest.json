@@ -2,7 +2,7 @@
   "name": "Satori Typer",
   "version": "0.1",
   "manifest_version": 3,
-  "description": "Make it easy to type and practice materials on SatoriReader.com",
+  "description": "Make it easy to type and practice materials on https://SatoriReader.com",
   "icons": { 
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
