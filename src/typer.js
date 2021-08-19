@@ -76,9 +76,9 @@ function setupSentences() {
             localStorage.setItem(episode, JSON.stringify(allTextVals()));
             isCorrect(this, sentence);
         })
-        $(this).on("keypress", enterToTab);
-
+        
         // Audio with focus and click
+        $(this).on("keypress", enterToTab);
         $(this).focus(playAudio);
         $(this).click(playAudio);
         $(this).prev().click(function() {
