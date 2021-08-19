@@ -9,5 +9,5 @@ Satori Typer is a Chrome Extension that makes it easy for you to type and practi
 
 - 🇯🇵　Enhance your Japanese through typing, sentence by sentence.
 - 🔊　Audio autoplay helps you type by ear.
-- 🖥　Data saved only on Local Storage (changing browsers or computers will result in loss of progress).
+- 🖥　Data saved only on Local Storage. (Changing browsers or computers will result in loss of progress records, but the real progress always resides in yourself.)
 

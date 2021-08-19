@@ -23,7 +23,7 @@ function checkCorrect(textArea, sentence) {
 }
 
 function sentenceHTML(sentence, audio, idx, width) {
-    style = `style="width: ${width}px; height: ${60 * Math.ceil(sentence.length * 24 / width)}px"`;
+    style = `style="width: ${width}px; height: ${10 + 60 * Math.ceil(sentence.length * 24 / width)}px"`;
     return `
         <span class="paragraph body" ${style}>
             <span class="sentence">
