@@ -14,7 +14,7 @@ const allTextVals = () => Array.from(
     )
 );
 
-function isCorrect(textArea, sentence) {
+function checkCorrect(textArea, sentence) {
     if ($(textArea).val().trim() === sentence) {
         $(textArea).next().addClass('correct-sentence');
     } else {
@@ -69,12 +69,12 @@ function setupSentences() {
         // Read from Local Stroage
         $(this).val(store[idx]);
         const sentence = sentencesWithAudios[idx].sentence
-        isCorrect(this, sentence);
+        checkCorrect(this, sentence);
 
         // Write to Local Stroage
         $(this).bind('input propertychange', () => {
             localStorage.setItem(episode, JSON.stringify(allTextVals()));
-            isCorrect(this, sentence);
+            checkCorrect(this, sentence);
         })
         
         // Audio with focus and click
