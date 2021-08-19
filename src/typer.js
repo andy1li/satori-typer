@@ -23,7 +23,7 @@ function checkCorrect(textArea, sentence) {
 }
 
 function sentenceHTML(sentence, audio, idx, width) {
-    style = `style="width: ${width}px; height: ${10 + 60 * Math.ceil(sentence.length * 24 / width)}px"`;
+    style = `style="width: ${width}px; height: ${8 + 60 * Math.ceil(sentence.length * 24 / width)}px"`;
     return `
         <span class="paragraph body" ${style}>
             <span class="sentence">
@@ -37,15 +37,6 @@ function sentenceHTML(sentence, audio, idx, width) {
         </span>
     `;
 }
-
-function enterToTab(e) {
-    const key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
-    if (key == 13) {
-        e.preventDefault();
-        const ts = $(this).closest('div').find('.free-typing');
-        ts.eq( ts.index(this) + 1 ).focus();
-    }
-};
 
 function playAudio() {
     $(this).prev().children().trigger('click');
@@ -78,7 +69,6 @@ function setupSentences() {
         })
         
         // Audio with focus and click
-        $(this).on("keypress", enterToTab);
         $(this).focus(playAudio);
         $(this).click(playAudio);
         $(this).prev().click(function() {
@@ -87,6 +77,21 @@ function setupSentences() {
             $(this).next().focus();
             $(this).next().bind('focus', playAudio);
         })
+
+        // key managment
+        $(this).on("keydown", function(e) {
+            const key = e.which;
+
+            // enter to tab
+            if (key == 13) {
+                e.preventDefault();
+                const tas = $(this).closest('div').find('.free-typing');
+                tas.eq( tas.index(this) + 1 ).focus();
+            }
+
+            // left and right
+            if (key == 37 || key == 39) e.stopPropagation();
+        });
     });
 };
 
