@@ -1,25 +1,35 @@
-const allSentences = () => Array.from(
+const allSentencesWithAudios = () => Array.from(
     $('#article-content .paragraph.body .sentence')
         .map(function(){
-            return $(this).find('.wpt, .nw').text()
+            return {
+                sentence: $(this).find('.wpt, .nw').text(), 
+                audio: $(this).attr('data-id')
+            };
         })
 );
 
-const allAudios= () => Array.from(
-    $('#article-content .paragraph.body .sentence')
-        .map(function(){
-            return $(this).attr('data-id');
-        })
+const allTextVals = () => Array.from(
+    $('.free-typing').map(function() { 
+        return $(this).val()} 
+    )
 );
 
-function sentenceHTML(sentence, idx, audios, width) {
+function isCorrect(textArea, sentence) {
+    if ($(textArea).val().trim() === sentence) {
+        $(textArea).next().addClass('correct-sentence');
+    } else {
+        $(textArea).next().removeClass('correct-sentence');
+    }
+}
+
+function sentenceHTML(sentence, audio, idx, width) {
     style = `style="width: ${width}px; height: ${60 * Math.ceil(sentence.length * 24 / width)}px"`;
     return `
         <span class="paragraph body" ${style}>
             <span class="sentence">
                 <span class="container">
                     <span class="sentence-number">${idx + 1}.</span>
-                    <span class="play-button-container"><span class="play-button play-button-standard noselect" onclick="router.route('RouteObjID_1000', function(event) { this.playSentenceClicked(event, '${audios[idx]}'); }, event);">▶️</span></span>
+                    <span class="play-button-container"><span class="play-button play-button-standard noselect" onclick="router.route('RouteObjID_1000', function(event) { this.playSentenceClicked(event, '${audio}'); }, event);">▶️</span></span>
                     <textarea class="free-typing" tabindex="${idx + 1}" ${style}></textarea>
                     <textarea tabindex=0 placeholder="${sentence}" ${style}></textarea>
                 </span>
@@ -29,17 +39,30 @@ function sentenceHTML(sentence, idx, audios, width) {
 }
     
 function setupSentences() {
-    const sentences = allSentences();
-    const audios = allAudios();
+    const episode = window.location.pathname;
+    const sentencesWithAudios = allSentencesWithAudios()
     $('#article-content').append('<div id="typer" class="article"></div>');
     $('#typer').hide()
     
     const width = $('#article-content').width() - 80;
-    allSentences().forEach((sentence, idx) =>  
+    sentencesWithAudios.forEach(({sentence, audio}, idx) => 
         $('#typer').append(
-            sentenceHTML(sentence, idx, audios, width)
+            sentenceHTML(sentence, audio, idx, width)
         )
     );
+
+    const store = JSON.parse(localStorage.getItem(episode)) || Array(12).fill('')
+    $('#article-content .free-typing').each(function(idx) {
+        $(this).val(store[idx]);
+        isCorrect(this, sentencesWithAudios[idx].sentence);
+    });
+
+    $('.free-typing').each(function(idx) {
+        $(this).bind('input propertychange', () => {
+            localStorage.setItem(episode, JSON.stringify(allTextVals()));
+            isCorrect(this, sentencesWithAudios[idx].sentence);
+        })
+    });
 };
 
 const readingMode = '📖 Reading Mode';

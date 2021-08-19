@@ -8,15 +8,8 @@
   box-sizing: border-box;
 }
 
-#typer .free-typing {
-  z-index: 1;
-}
-
-#typer textarea::placeholder {
-  color: lightgray;  
-}
-
 #typer textarea {
+  z-index: 0;
   resize: none;
   border: 0;
   outline: 0;
@@ -30,6 +23,16 @@
   font-size: 24px;
   font-family: "Hiragino Mincho Pro", "MS Mincho", "MS PMincho", 游明朝, "Yu Mincho", YuMincho, serif;
 }
+
+#typer .free-typing {
+  z-index: 1;
+}
+
+
+#typer textarea::placeholder {
+  color: lightgray;  
+}
+
 
 #typer .sentence-number {
     margin-right: 5px;
