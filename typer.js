@@ -51,18 +51,29 @@ function setupSentences() {
         )
     );
 
-    const store = JSON.parse(localStorage.getItem(episode)) || Array(12).fill('')
+    const store = JSON.parse(localStorage.getItem(episode)) || [];
     $('#article-content .free-typing').each(function(idx) {
         $(this).val(store[idx]);
         isCorrect(this, sentencesWithAudios[idx].sentence);
-    });
 
-    $('.free-typing').each(function(idx) {
         $(this).bind('input propertychange', () => {
             localStorage.setItem(episode, JSON.stringify(allTextVals()));
             isCorrect(this, sentencesWithAudios[idx].sentence);
         })
+
+        function playAudio() {
+            $(this).prev().children().trigger('click');
+        }
+        $(this).focus(playAudio);
+        $(this).click(playAudio);
+        $(this).prev().click(function() {
+            $(this).next().unbind('focus');
+            $(this).next().focus();
+            $(this).next().bind('focus', playAudio);
+        })
     });
+
+
 };
 
 const readingMode = '📖 Reading Mode';
