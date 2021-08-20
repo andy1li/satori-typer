@@ -24,19 +24,6 @@ function checkCorrect(textArea, sentence) {
     }
 }
 
-// function checkCorrect(textArea, sentence) {
-//     if (textArea.val().trim() === sentence 
-//     && !textArea.next().hasClass('correct-sentence')) 
-//     {
-//         textArea.next().animate({ opacity: 0}, 0);
-//         console.log('')
-//         textArea.next().addClass('correct-sentence');
-//         textArea.next().animate({ opacity: 1}, 1000);
-//     } else {
-//         textArea.next().removeClass('correct-sentence');
-//     }
-// }
-
 function sentenceHTML(sentence, audio, idx, width) {
     style = `style="width: ${width}px; height: ${8 + 60 * Math.ceil(sentence.length * 24 / width)}px"`;
     return `
@@ -102,6 +89,11 @@ function setupSentences() {
                 e.preventDefault();
                 const tas = $(this).closest('div').find('.free-typing');
                 tas.eq( tas.index(this) + 1 ).focus();
+            }
+
+            // ctrl to repeat current sentence
+            if (key == 17) {
+                $(this).prev().children().trigger('click');
             }
 
             // left and right
