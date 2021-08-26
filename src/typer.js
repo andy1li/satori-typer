@@ -6,13 +6,12 @@ const allSentencesWithAudios = () => Array.from(
                 audio: $(this).attr('data-id')
             };
         })
-);
+    );
 
 const allTextVals = () => Array.from(
     $('#typer .free-typing').map(function() { 
         return $(this).val()} 
-    )
-);
+    ));
 
 function checkCorrect(textArea, sentence) {
     if (textArea.val().trim() === sentence) {
@@ -25,13 +24,27 @@ function checkCorrect(textArea, sentence) {
 }
 
 function sentenceHTML(sentence, audio, idx, width) {
-    style = `style="width: ${width}px; height: ${8 + 60 * Math.ceil(sentence.length * 24 / width)}px"`;
+    const style = `style="width: ${width - 80}px; height: ${8 + 60 * Math.ceil((sentence.length) * 24 / (width - 85))}px"`;
+    const code = `
+        const markers = this.sentenceAudioPositions.concat(
+            this.player.getDuration()
+        );
+        const durations = markers.slice(2).map((x, i) => 
+            Math.ceil(x - markers[i+1])
+        );
+
+        clearInterval(window.typerLoop);
+        window.typerLoop = setInterval(() => 
+            this.playSentenceClicked(event, '${audio}')
+            , durations[${idx}] * 1000
+        );
+    `;
     return `
         <span class="paragraph body" ${style}>
             <span class="sentence">
                 <span class="container">
                     <span class="sentence-number">${idx + 1}.</span>
-                    <span class="play-button-container"><span class="play-button play-button-standard noselect" onclick="router.route('RouteObjID_1000', function(event) { this.playSentenceClicked(event, '${audio}'); }, event);">▶️</span></span>
+                    <span class="play-button-container"><span class="play-button play-button-standard noselect" onclick="router.route('RouteObjID_1000', function(event) { this.playSentenceClicked(event, '${audio}'); ${code}}, event);">▶️</span></span>
                     <textarea class="free-typing" tabindex="${idx + 1}" ${style}></textarea>
                     <textarea tabindex=0 placeholder="${sentence}" ${style}></textarea>
                 </span>
@@ -50,7 +63,7 @@ function setupSentences() {
     $('#article-content').append('<div id="typer" class="article"></div>');
     $('#typer').hide()
     
-    const width = $('#article-content').width() - 80;
+    const width = $('#article-content').width();
     sentencesWithAudios.forEach(({sentence, audio}, idx) => 
         $('#typer').append(
             sentenceHTML(sentence, audio, idx, width)
@@ -70,33 +83,33 @@ function setupSentences() {
             checkCorrect($(this), sentence);
         })
         
-        // Audio with focus and click
+        // Play audio when focused or clicked
         $(this).focus(playAudio);
         $(this).click(playAudio);
         $(this).prev().click(function() {
-            // prevent infinite loop
+            // Prevent infinite loop
             $(this).next().unbind('focus');
             $(this).next().focus();
             $(this).next().bind('focus', playAudio);
         })
 
-        // key managment
+        // Key managment
         $(this).on("keydown", function(e) {
             const key = e.which;
 
-            // enter to tab
+            // Enter to Tab
             if (key == 13) {
                 e.preventDefault();
                 const tas = $(this).closest('div').find('.free-typing');
                 tas.eq( tas.index(this) + 1 ).focus();
             }
 
-            // ctrl to repeat current sentence
+            // Ctrl to repeat current sentence
             if (key == 17) {
                 $(this).prev().children().trigger('click');
             }
 
-            // left and right
+            // Left and Right
             if (key == 37 || key == 39) e.stopPropagation();
         });
     });
