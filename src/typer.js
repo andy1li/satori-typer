@@ -32,19 +32,23 @@ function sentenceHTML(sentence, audio, idx, width) {
         const durations = markers.slice(2).map((x, i) => 
             Math.ceil(x - markers[i+1])
         );
+        
+        if (!window.typerLoop) {
+            window.addEventListener('keydown', function(e) {
+                if (e.which == 32) { // Spacebar
+                    clearInterval(window.typerLoop);
+                    $('#typer .free-typing').each(function() {
+                        $(this).blur();
+                    });
+                };
+            });
+        };
 
         clearInterval(window.typerLoop);
         window.typerLoop = setInterval(() => 
             this.playSentenceClicked(event, '${audio}')
             , durations[${idx}] * 1000
         );
-
-        window.addEventListener('keydown', function(e) {
-            if (e.which == 32) { // Spacebar
-                clearInterval(window.typerLoop);
-                $(this).blur();
-            };
-        });
     `;
     return `
         <span class="paragraph body" ${style}>
