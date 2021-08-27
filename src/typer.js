@@ -8,7 +8,7 @@ const allSentencesWithAudios = () => Array.from(
         })
     );
 
-const allTextVals = () => Array.from(
+const allTextValues = () => Array.from(
     $('#typer .free-typing').map(function() { 
         return $(this).val()} 
     ));
@@ -25,7 +25,7 @@ function checkCorrect(textArea, sentence) {
 
 function sentenceHTML(sentence, audio, idx, width) {
     const style = `style="width: ${width - 80}px; height: ${8 + 60 * Math.ceil((sentence.length) * 24 / (width - 85))}px"`;
-    const code = `
+    const repeats = `
         const markers = this.sentenceAudioPositions.concat(
             this.player.getDuration()
         );
@@ -38,13 +38,20 @@ function sentenceHTML(sentence, audio, idx, width) {
             this.playSentenceClicked(event, '${audio}')
             , durations[${idx}] * 1000
         );
+
+        window.addEventListener('keydown', function(e) {
+            if (e.which == 32) { // Spacebar
+                clearInterval(window.typerLoop);
+                $(this).blur();
+            };
+        });
     `;
     return `
         <span class="paragraph body" ${style}>
             <span class="sentence">
                 <span class="container">
                     <span class="sentence-number">${idx + 1}.</span>
-                    <span class="play-button-container"><span class="play-button play-button-standard noselect" onclick="router.route('RouteObjID_1000', function(event) { this.playSentenceClicked(event, '${audio}'); ${code}}, event);">▶️</span></span>
+                    <span class="play-button-container"><span class="play-button play-button-standard noselect" onclick="router.route('RouteObjID_1000', function(event) { this.playSentenceClicked(event, '${audio}'); ${repeats}}, event);">▶️</span></span>
                     <textarea class="free-typing" tabindex="${idx + 1}" ${style}></textarea>
                     <textarea tabindex=0 placeholder="${sentence}" ${style}></textarea>
                 </span>
@@ -78,8 +85,8 @@ function setupSentences() {
         checkCorrect($(this), sentence);
 
         // Write to Local Stroage
-        $(this).bind('input propertychange', () => {
-            localStorage.setItem(episode, JSON.stringify(allTextVals()));
+        $(this).on('input', () => {
+            localStorage.setItem(episode, JSON.stringify(allTextValues()));
             checkCorrect($(this), sentence);
         })
         
@@ -94,7 +101,7 @@ function setupSentences() {
         })
 
         // Key managment
-        $(this).on("keydown", function(e) {
+        $(this).keydown(function(e) {
             const key = e.which;
 
             // Enter to Tab
