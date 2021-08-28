@@ -32,10 +32,10 @@ function sentenceHTML(sentence, audio, idx, width) {
         const durations = markers.slice(2).map((x, i) => 
             Math.ceil(x - markers[i+1])
         );
-        
+
         if (!window.typerLoop) {
             window.addEventListener('keydown', function(e) {
-                if (e.which == 32) { // Spacebar
+                if (e.which == Constants.KEY_CODE_SPACE) {
                     clearInterval(window.typerLoop);
                     $('#typer .free-typing').each(function() {
                         $(this).blur();
