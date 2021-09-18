@@ -2,7 +2,7 @@
 
 # ![icon48](src/icons/icon48.png) Satori Typer
 
-Satori Typer is a Chrome Extension that makes it easy for you to type and practice materials on [Satori Reader](https://www.satorireader.com/). After installation, click the `Reading Mode` / `Typing Mode` button in any episode to switch between them.
+[Satori Typer](https://chrome.google.com/webstore/detail/satori-typer/ldcgjddkaogbcjphbnkkjmndnbnomdll) is a Chrome Extension that makes it easy for you to type and practice materials on [Satori Reader](https://www.satorireader.com/). After installation, click the `Reading Mode` / `Typing Mode` button in any episode to switch between them.
 
 🚨 **This is a fan-made project, NOT affiliated with the Satori Reader team.**
 

@@ -29,8 +29,9 @@ function sentenceHTML(sentence, audio, idx, width) {
         const markers = this.sentenceAudioPositions.concat(
             this.player.getDuration()
         );
-        const durations = markers.slice(2).map((x, i) => 
-            Math.ceil(x - markers[i+1])
+        const start = $('.headline').text() ? 2 : 1;
+        const durations = markers.slice(start).map((x, i) => 
+            Math.ceil(x - markers[i+(start-1)])
         );
 
         if (!window.typerLoop) {
@@ -68,6 +69,25 @@ function playAudio() {
     $(this).prev().children().trigger('click');
 }
 
+function keydownHandler(e) {
+    const key = e.which;
+
+    // Enter to Tab
+    if (key == 13) {
+        e.preventDefault();
+        const tas = $(this).closest('div').find('.free-typing');
+        tas.eq( tas.index(this) + 1 ).focus();
+    }
+
+    // Ctrl to repeat current sentence
+    if (key == 17) {
+        $(this).prev().children().trigger('click');
+    }
+
+    // Left and Right
+    if (key == 37 || key == 39) e.stopPropagation();
+}
+
 function setupSentences() {
     const episode = window.location.pathname;
     const sentencesWithAudios = allSentencesWithAudios()
@@ -96,7 +116,6 @@ function setupSentences() {
         
         // Play audio when focused or clicked
         $(this).focus(playAudio);
-        $(this).click(playAudio);
         $(this).prev().click(function() {
             // Prevent infinite loop
             $(this).next().unbind('focus');
@@ -104,25 +123,7 @@ function setupSentences() {
             $(this).next().bind('focus', playAudio);
         })
 
-        // Key managment
-        $(this).keydown(function(e) {
-            const key = e.which;
-
-            // Enter to Tab
-            if (key == 13) {
-                e.preventDefault();
-                const tas = $(this).closest('div').find('.free-typing');
-                tas.eq( tas.index(this) + 1 ).focus();
-            }
-
-            // Ctrl to repeat current sentence
-            if (key == 17) {
-                $(this).prev().children().trigger('click');
-            }
-
-            // Left and Right
-            if (key == 37 || key == 39) e.stopPropagation();
-        });
+        $(this).keydown(keydownHandler);
     });
 };
 
